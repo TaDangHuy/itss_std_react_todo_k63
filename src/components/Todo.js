@@ -26,6 +26,16 @@ function Todo() {
     /* テストコード 終了 */
   ]);
 
+  const [filter, setFilter] = useState('ALL');
+
+  const displayItems = items.filter(item => {
+    if (filter === 'ALL') return true;
+    if (filter === 'TODO') return !item.done;
+    if (filter === 'DONE') return item.done;
+  });
+
+  const filterHandler = value => setFilter(value);
+  
   const addHandler = text => {
     putItems([...items, { key: getKey(), text, done: false }]);
   };
@@ -36,12 +46,18 @@ function Todo() {
         ITSS ToDoアプリ
       </div>
       <Input addHandler={addHandler} />
-      
-      {items.map(item => (
-        <TodoItem key={item.key} item={item}/>
+      <Filter
+        onChange={filterHandler}
+        value={filter}
+      />
+      {displayItems.map(item => (
+        <TodoItem 
+          key={item.key}
+          item={item}
+        />
       ))}
       <div className="panel-block">
-        {items.length} items
+        {displayItems.length} items
       </div>
     </div>
   );
